@@ -25,8 +25,6 @@ end
 def save_table(hash)
   hash["businesses"].each do |business|
     new = Business.new
-    # puts business
-    # puts new
     new.name = business["name"]
     new.website = business["url"]
     new.review_count = business["review_count"]
@@ -36,12 +34,4 @@ def save_table(hash)
     new.phone = business["phone"]
     new.save
   end
-  binding.pry
 end
-
-def search_and_add_businesses(term, location)
-  results_hash = search(term, location)
-  save_table(results_hash)
-end
-
-# pry.Start

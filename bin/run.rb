@@ -1,13 +1,11 @@
+require 'pry'
 require_relative '../config/environment'
+
+pry.Start
 
 username = welcome
 
-def username_search(input)
-  if !User.all.find {|user| user.username == input}
-   User.new(username: input)
- else
-   @username = input
- end
+username_search(username)
 
 choice = options
 
@@ -23,5 +21,3 @@ when 2
 when 3
   run_option_3
 end
-
-end_message

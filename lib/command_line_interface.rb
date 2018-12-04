@@ -1,6 +1,16 @@
 def welcome
-  puts "Welcome your CRM tool! Please enter your username."
+  puts "Welcome to your CRM tool! Please enter your username."
   gets.chomp
+end
+
+def username_search(input)
+  if User.all.find {|user| user.username == input}
+    user = User.new(username: input)
+    user.save
+    puts "New user created. Nice to meet you, #{input}!"
+  else
+    puts "Welcome back, #{input}!"
+ end
 end
 
 def options
