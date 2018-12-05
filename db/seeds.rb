@@ -11,7 +11,8 @@
 # User.create(username: "BobWazHere")
 # User.create(username: "MyspaceTom")
 
-ContactHistory.create(user_id: 1, business_id: 4, status: "Good lead", description: "Spoke with Amy Woods and she would like to arrange a meeting")
+ContactHistory.create(user_id: 2, business_id: 4, status: "Good lead", description: "Spoke with Amy Woods and she would like to arrange a meeting")
+ContactHistory.create(user_id: 2, business_id: 4, status: "Sold", description: "Subscribed for 1 year")
 # ContactHistory.create(user_id: 4, business_id: 2)
 # ContactHistory.create(user_id: 2, business_id: 5)
 # ContactHistory.create(user_id: 5, business_id: 5)

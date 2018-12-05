@@ -1,4 +1,5 @@
 require "terminal-table"
+require "table_print"
 require_relative "./search_and_save"
 
 def welcome
@@ -77,3 +78,20 @@ end
 
 
 # ------------------------- Option 2 --------------------------
+
+def run_option_2(username)
+  display_contact_history_ledger(retrieve_current_contact_history_ledger(username))
+
+end
+
+def retrieve_current_contact_history_ledger(username)
+  username = username
+  current_user = User.find_by(username: "#{username}")
+  current_contact_ledger = []
+  current_contact_ledger << ContactHistory.where(user_id: current_user)
+  # binding.pry
+end
+
+def display_contact_history_ledger(contact_history_array)
+  tp Business.all, {:name => {:width => 70}}, :phone, {"contact_histories.status" => {:display_name => "Status", :width => 12}}, {"contact_histories.updated_at" => {:display_name => "Last Contacted", :width => 20}}, {"contact_histories.description" => {:width => 100}}
+end
