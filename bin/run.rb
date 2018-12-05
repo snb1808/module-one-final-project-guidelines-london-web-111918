@@ -20,5 +20,6 @@ case choice
   when 3
     run_option_3
   else
+    puts "\n \n" 
     puts "Please choose a number between 1 and 3"
   end
