@@ -8,4 +8,8 @@ gem "require_all"
 gem "json"
 gem "http"
 gem "terminal-table"
+gem 'pry-byebug'
+gem 'pry-doc'
+gem 'pry-rescue'
+gem 'pry-stack_explorer'
 # gem "optparse"
