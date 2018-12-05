@@ -35,6 +35,7 @@ end
 def run_option_1
   results = user_input
   display_table(results)
+  # save_table_or_options_menu?
 end
 
 
@@ -46,17 +47,32 @@ def user_input
 end
 
 def yelp_results_hash(array)
-  result_hash = search(array[0], array[1]) # YELP API CALL
+  result_hash = search(array[0], array[1]) # yelp api call
 end
 
 def display_table(yelp_results_hash)
   rows = []
-  rows << ["Name", "Address", "Rating", "Price"]
+  rows << ["Name", "Address", "Phone", "Rating", "Price"]
   yelp_results_hash["businesses"].each do |business|
-    rows << [business["name"], business["location"]["display_address"], business["rating"], business["price"]]
+    rows << [business["name"], business["location"]["display_address"], business["phone"], business["rating"], business["price"]]
+    for_db = {name: business["name"], phone: business["phone"], location: business["location"]["display_address"], review_count: business["review_count"], rating: business["rating"], price: business["price"], website: business["url"]}
+    Business.create(for_db)
   end
   table = Terminal::Table.new :rows => rows
   puts table
+end
+
+def save_table_or_options_menu?
+  puts "[s] to save table to database"
+  puts "[o] to go back to options menu "
+  answer = gets.chomp
+  if answer == "s"
+     save_table_to_db
+  elsif answer == "o"
+    options
+  else
+    nil
+  end
 end
 
 

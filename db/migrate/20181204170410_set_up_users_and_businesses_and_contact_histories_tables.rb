@@ -6,12 +6,12 @@ class SetUpUsersAndBusinessesAndContactHistoriesTables < ActiveRecord::Migration
 
     create_table :businesses do |t|
       t.string :name
-      t.string :website
+      t.string :phone
+      t.string :location
       t.integer :review_count
       t.integer :rating
       t.string :price
-      t.string :location
-      t.string :phone
+      t.string :website
     end
 
     create_table :contact_histories do |t|
