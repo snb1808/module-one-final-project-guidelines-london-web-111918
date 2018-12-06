@@ -1,6 +1,7 @@
 require "terminal-table"
 require "table_print"
 require 'highline'
+require 'pry'
 
 
 require_relative "./search_and_save"
@@ -23,18 +24,29 @@ def username_search(input)
  end
 end
 
-def options
-  puts "\n \n"
-  puts "Please select one of the below options:"
-  puts "1. Search businesses by category and location"
-  puts "2. Contact History"
-  input = gets.chomp
-  input
+def run_main_menu
+  choice = options.to_i
+  case choice
+    when 1
+      run_option_1
+    when 2
+      run_option_2(username)
+    when 3
+      run_option_3
+    else
+      puts "\n \n"
+      puts "Please choose a number between 1 and 3"
+  end
 end
 
-def end_message
+def options
   puts "\n \n"
-  puts "Thank you for using the CRM app! Have a nice day!"
+  puts "Please select one of the following options:"
+  puts "1. Search businesses by category and location"
+  puts "2. Contact History"
+  puts "3. Exit application"
+  input = gets.chomp
+  input
 end
 
 
@@ -43,6 +55,8 @@ end
 def run_option_1
   results = user_input
   display_table(results)
+  answer = option_1_menu
+  next_step(answer)
   # save_table_or_options_menu?
 end
 
@@ -73,6 +87,25 @@ def display_table(yelp_results_hash)
   puts "\n \n"
 end
 
+def option_1_menu
+  puts "\n \n"
+  puts "Please select one of the following options:"
+  puts "1. Make another search"
+  puts "2. Return to main menu"
+  puts "3. Exit application"
+  gets.chomp
+end
+
+def next_step(answer)
+    case answer
+    when 1
+      run_option_1
+    when 2
+      run_main_menu
+    when 3
+      run_option_3
+    end
+end
 # def save_table_or_options_menu?
 #   puts "[s] to save table to database"
 #   puts "[o] to go back to options menu "
@@ -145,7 +178,7 @@ def display_contact_history_options
     when 9
       search_by_date_range
     when 10
-      back_to_main_menu
+      run_main_menu
     else
       puts "You must enter a valid Integer."
   end
@@ -198,4 +231,17 @@ def search_by_date_range
 end
 
 def back_to_main_menu
+end
+
+#-------------------- Option 3 --------------------------
+
+def run_option_3
+  end_message
+  sleep(1)
+  exit
+end
+
+def end_message
+  puts "\n \n"
+  puts "Thank you for using the CRM app! Have a nice day!"
 end
