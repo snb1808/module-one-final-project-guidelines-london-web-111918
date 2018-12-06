@@ -272,12 +272,34 @@ def find_a_colleages_records
 end
 
 def find_a_business_not_contacted_since_a_given_date
+  puts "\n \nEnter the date in the following format: YYYY-MM-DD\n \n"
+  date = gets.chomp
+  puts "\n \n"
+  tp ContactHistory.where("updated_at >= ?", date),
+  :id,
+  {"user.id" => {:display_name => "User ID"}},
+  {:status => {:display_name => "Status", :width => 20}},
+  {:updated_at => {:display_name => "Contact Date", :width => 20}},
+  {:description => {:display_name => "Description", :width => 100}},
+  {"business.name" => {:display_name => "Business"}},
+  {"user.username" => {:display_name => "User"}}
 end
 
 def filter_by_status
 end
 
 def search_by_date
+  puts "Enter the date of the interation in the following format: YYYY-MM-DD"
+  date = gets.chomp
+  datetime = :updated_at
+  date2 = datetime[0].split(" ")[0]
+  tp ContactHistory.where(date2 == date),
+        :id,
+        {"user.id" => {:display_name => "User ID"}},
+        {:status => {:display_name => "Status", :width => 20}},
+        {:updated_at => {:display_name => "Contact Date", :width => 20}},
+        {:description => {:display_name => "Description", :width => 100}},
+        {"business.name" => {:display_name => "Business"}}
 end
 
 #-------------------- Option 3 --------------------------
