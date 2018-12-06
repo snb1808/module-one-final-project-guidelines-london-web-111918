@@ -25,23 +25,3 @@ def search(term, location)
   response = HTTP.auth("Bearer #{API_KEY}").get(url, params: params)
   response.parse
 end
-
-def save_table(hash)
-  hash["businesses"].each do |array|
-    array.each do |business|
-    new = Business.new
-    new.name = business["name"]
-    new.website = business["url"]
-    new.review_count = business["review_count"]
-    new.rating = business["rating"]
-    new.price = business["price"]
-    new.location = business["location"]["display_address"]
-    new.phone = business["phone"]
-  end
-end
-end
-
-def search_and_add_businesses(term, location)
-  results_hash = search(term, location)
-  save_table(results_hash)
-end

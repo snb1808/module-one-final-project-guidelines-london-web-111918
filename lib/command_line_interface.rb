@@ -3,7 +3,6 @@ require "table_print"
 require 'highline'
 require 'pry'
 
-
 require_relative "./search_and_save"
 
 def welcome
@@ -16,18 +15,15 @@ def stored_name_input
   name
 end
 
-
-
-
-def username_search(input)
-  if User.all.find {|user| user.username == input}
+def username_search
+  if User.all.find {|user| user.username == USERNAME}
     puts "\n \n"
-    puts "Welcome back, #{input}!"
+    puts "Welcome back, #{USERNAME}!"
   else
-    user = User.new(username: input)
+    user = User.new(username: USERNAME)
     user.save
     puts "\n \n"
-    puts "New user created. Nice to meet you, #{input}!"
+    puts "New user created. Nice to meet you, #{USERNAME}!"
  end
 end
 
@@ -37,7 +33,7 @@ def run_main_menu
     when 1
       run_option_1
     when 2
-      run_option_2(username)
+      run_option_2
     when 3
       run_option_3
     else
@@ -106,12 +102,17 @@ end
 def next_step(answer)
     case answer
     when 1
-      run_option_1
+      run_option_1_again
     when 2
       run_main_menu
     when 3
       run_option_3
     end
+end
+
+def run_option_1_again
+  display_table(user_input)
+  run_main_menu
 end
 # def save_table_or_options_menu?
 #   puts "[s] to save table to database"
@@ -129,14 +130,13 @@ end
 
 # ------------------------- Option 2 --------------------------
 
-def run_option_2(username)
-  display_contact_history_table(retrieve_current_contact_history(username))
-  display_contact_history_options(username)
+def run_option_2
+  display_contact_history_table(retrieve_current_contact_history)
+  display_contact_history_options
 end
 
-def retrieve_current_contact_history(parameter)
-  username = parameter
-  current_user = User.find_by(username: "#{username}")
+def retrieve_current_contact_history
+  current_user = User.find_by(username: "#{USERNAME}")
   current_user
   # current_contact_ledger = []
   # current_contact_ledger << ContactHistory.where(user_id: current_user)
@@ -149,7 +149,7 @@ def display_contact_history_table(contact_history_array)
   puts "\n \n"
 end
 
-def display_contact_history_options(username)
+def display_contact_history_options
   cli = HighLine.new
   puts "\n \n"
   answer = cli.ask(
@@ -168,13 +168,13 @@ def display_contact_history_options(username)
 
   case answer
     when 1
-      update_a_record(username)
+      update_a_record
     when 2
       create_a_new_record
     when 3
       find_a_business_by_name
     when 4
-      find_only_my_records(username)
+      find_only_my_records
     when 5
       find_a_colleages_records
     when 6
@@ -192,7 +192,7 @@ def display_contact_history_options(username)
   end
 end
 
-def update_a_record(username)
+def update_a_record
   cli = HighLine.new
   puts "\n \n"
   record_id = cli.ask("Enter a record ID", Integer)
@@ -215,20 +215,17 @@ def update_a_record(username)
     ContactHistory.where(id: record_id).update(status: new_status)
     puts "\n \n"
     render_contact_histories_table(record_id)
-    display_contact_history_options(username)
+    display_contact_history_options
     # binding.pry
   when 2
     new_description = cli.ask("Write a new description")
     ContactHistory.where(id: record_id).update(description: new_description)
     puts "\n \n"
     render_contact_histories_table(record_id)
-    display_contact_history_options(username)
+    display_contact_history_options
   when 3
-    display_contact_history_options(username)
+    display_contact_history_options
   end
-end
-
-def current_user_id(rec)
 end
 
 def render_contact_histories_table(record_id)
@@ -247,9 +244,11 @@ end
 #   userid
 # end
 
-def find_only_my_records(stored_name_input)
-  userid = retrieve_current_contact_history(stored_name_input).id
-  tp ContactHistory.where(user_id: userid), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}end
+def find_only_my_records
+  userid = retrieve_current_contact_history.id
+  tp ContactHistory.where(user_id: userid), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+end
+
 def find_a_colleages_records
 end
 
@@ -279,5 +278,5 @@ end
 
 def end_message
   puts "\n \n"
-  puts "Thank you for using the CRM app! Have a nice day!"
+  puts "Thank you for using the CRM app, #{USERNAME}! Have a nice day!"
 end

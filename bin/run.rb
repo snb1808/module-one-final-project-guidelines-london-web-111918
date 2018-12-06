@@ -5,7 +5,7 @@ require_relative '../config/environment'
 require_relative "../lib/command_line_interface.rb"
 
 
-
-username = welcome
-username_search(username)
+welcome
+USERNAME = stored_name_input
+username_search
 run_main_menu
