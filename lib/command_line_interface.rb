@@ -121,7 +121,13 @@ end
 
 def display_contact_history_table(contact_history_array)
   puts "\n \n"
-  tp Business.all, :id, {:name => {:width => 70}}, :phone, {"contact_histories.id" => {:display_name => "Msg_ID", :width => 6}},{"contact_histories.status" => {:display_name => "Status", :width => 12}}, {"contact_histories.updated_at" => {:display_name => "Contact Date", :width => 20}}, {"contact_histories.description" => {:display_name => "Description", :width => 100}}
+  tp Business.all, :id,
+                  {:name => {:width => 70}},
+                  :phone,
+                  {"contact_histories.id" => {:display_name => "Rec_ID", :width => 6}},
+                  {"contact_histories.status" => {:display_name => "Status", :width => 12}},
+                  {"contact_histories.updated_at" => {:display_name => "Contact Date", :width => 20}},
+                  {"contact_histories.description" => {:display_name => "Description", :width => 100}}
   puts "\n \n"
 end
 
@@ -172,7 +178,12 @@ def update_a_record
   puts "\n \n"
   record_id = cli.ask("Enter a record ID", Integer)
   puts "\n \n"
-  display_current_record = tp ContactHistory.find(record_id), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+  display_current_record = tp ContactHistory.find(record_id), :id,
+                                                              {"business.name" => {:display_name => "Business", :width => 70}},
+                                                              {"business.phone" => {:display_name => "Tel."}},
+                                                              {:status => {:display_name => "Status", :width => 15}},
+                                                              {:updated_at => {:display_name => "Contact Date", :width => 20}},
+                                                              {:description => {:display_name => "Description", :width => 100}}
   puts "\n \n"
 
   answer_id = cli.ask(
@@ -241,6 +252,9 @@ end
 end
 
 def find_a_business_by_name
+  name = cli.ask("Please enter the business' name")
+  business = Business.all.find_by(:name == name)
+  tp business, :id, :name, :phone
 end
 
 def find_only_my_records
