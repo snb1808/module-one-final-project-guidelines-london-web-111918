@@ -1,5 +1,8 @@
 require "terminal-table"
 require "table_print"
+require 'highline'
+
+
 require_relative "./search_and_save"
 
 def welcome
@@ -101,22 +104,98 @@ end
 
 def display_contact_history_table(contact_history_array)
   puts "\n \n"
-  tp Business.all, :id, {:name => {:width => 70}}, :phone, {"contact_histories.status" => {:display_name => "Status", :width => 12}}, {"contact_histories.updated_at" => {:display_name => "Contact Date", :width => 20}}, {"contact_histories.description" => {:display_name => "Description", :width => 100}}
-  puts "\n \n" 
+  tp Business.all, :id, {:name => {:width => 70}}, :phone, {"contact_histories.id" => {:display_name => "Msg_ID", :width => 6}},{"contact_histories.status" => {:display_name => "Status", :width => 12}}, {"contact_histories.updated_at" => {:display_name => "Contact Date", :width => 20}}, {"contact_histories.description" => {:display_name => "Description", :width => 100}}
+  puts "\n \n"
 end
 
 def display_contact_history_options
+  cli = HighLine.new
   puts "\n \n"
-  puts "Options"
-  puts "1. Update a record"
-  puts "2. Create a new record"
-  puts "3. Find business by name"
-  puts "4. Find only my records"
-  puts "5. Find colleages records"
-  puts "6. Find businesses not contacted before a given date"
-  puts "7. Filter by status"
-  puts "8. Search by date"
-  puts "9. Search by data range"
-  puts "10. Main Menu"
+  answer = cli.ask(
+  "Choose an option
+  1. Update a record
+  2. Create a new record
+  3. Find a business by name
+  4. Find only my records
+  5. Find a colleages records
+  6. Find businesses not contacted before a given date
+  7. Filter by status
+  8. Search by date
+  9. Search by data range
+  10. Main Menu", Integer) { |q| q.in = 1..10 }
   puts "\n \n"
+
+  case answer
+    when 1
+      update_a_record
+    when 2
+      create_a_new_record
+    when 3
+      find_a_business_by_name
+    when 4
+      find_only_my_records
+    when 5
+      find_a_colleages_records
+    when 6
+      find_a_business_not_contacted_before_a_given_date
+    when 7
+      filter_by_status
+    when 8
+      search_by_date
+    when 9
+      search_by_date_range
+    when 10
+      back_to_main_menu
+    else
+      puts "You must enter a valid Integer."
+  end
+end
+
+def update_a_record
+  cli = HighLine.new
+  puts "\n \n"
+  record_id = cli.ask("Enter a record ID", Integer)
+  puts "\n \n"
+  # binding.pry
+  # display_contact_history_table(ContactHistory.find(record_id))
+  tp ContactHistory.find(record_id), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+  puts "\n \n"
+
+  answer_id = cli.ask(
+    "Choose an option
+    1. Update status
+    2. Update description
+    3. Go back to display contact history options." , Integer) { |q| q.in = 1..3 }
+  puts "\n \n"
+end
+
+def render_contact_histories_table(required_method)
+  tp required_method, :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+end
+
+def create_a_new_record
+end
+
+def find_a_business_by_name
+end
+
+def find_only_my_records
+end
+
+def find_a_colleages_records
+end
+
+def find_a_business_not_contacted_before_a_given_date
+end
+
+def filter_by_status
+end
+
+def search_by_date
+end
+
+def search_by_date_range
+end
+
+def back_to_main_menu
 end

@@ -13,4 +13,5 @@ gem 'pry-doc'
 gem 'pry-rescue'
 gem 'pry-stack_explorer'
 gem "table_print"
+gem 'highline'
 # gem "optparse"
