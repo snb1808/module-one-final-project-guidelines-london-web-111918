@@ -7,8 +7,8 @@ require_relative "../lib/command_line_interface.rb"
 
 
 
-
-username = welcome
+welcome
+username = stored_name_input
 username_search(username)
 choice = options.to_i
 
@@ -20,6 +20,6 @@ case choice
   when 3
     run_option_3
   else
-    puts "\n \n" 
+    puts "\n \n"
     puts "Please choose a number between 1 and 3"
   end
