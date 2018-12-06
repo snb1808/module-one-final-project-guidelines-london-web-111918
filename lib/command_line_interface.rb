@@ -94,19 +94,6 @@ def display_table(yelp_results_hash)
   counter
 end
 
-# def save_table_or_options_menu?
-#   puts "[s] to save table to database"
-#   puts "[o] to go back to options menu "
-#   answer = gets.chomp
-#   if answer == "s"
-#      save_table_to_db
-#   elsif answer == "o"
-#     options
-#   else
-#     nil
-#   end
-# end
-
 # ------------------------- Option 2 --------------------------
 
 def run_option_2
@@ -142,7 +129,7 @@ def display_contact_history_options
   4. Find a business by name
   5. Find only my records
   6. Find a colleages records
-  7. Find businesses not contacted before a given date
+  7. Find businesses not contacted since a given date
   8. Filter by status
   9. Search by date
   10. Main menu\n \n", Integer) { |q| q.in = 1..10 }
@@ -155,13 +142,13 @@ def display_contact_history_options
     when 3
       delete_a_record
     when 4
-      find_a_business_by_name
+      find_business_by_name
     when 5
       find_only_my_records
     when 6
       find_a_colleages_records
     when 7
-      find_a_business_not_contacted_before_a_given_date
+      find_a_business_not_contacted_since_a_given_date
     when 8
       filter_by_status
     when 9
@@ -251,10 +238,19 @@ end
   run_main_menu
 end
 
-def find_a_business_by_name
-  name = cli.ask("Please enter the business' name")
-  business = Business.all.find_by(:name == name)
-  tp business, :id, :name, :phone
+def find_business_by_name
+  puts "\n \nPlease enter the business' name\n \n"
+  answer = gets.chomp
+  puts "\n \n"
+  business = Business.all.find {|biz| biz.name == answer}
+  tp business, :id,
+              :name,
+              :phone,
+              :location,
+              {:website => {:width => 100}},
+              {"contact_histories.id" => {:display_name => "Rec ID"}},
+              {"contact_histories.status" => {:display_name => "Status"}},
+              {"contact_histories.description" => {:display_name => "Description", :width => 100}}
 end
 
 def find_only_my_records
@@ -263,9 +259,19 @@ def find_only_my_records
 end
 
 def find_a_colleages_records
+  tp User.all, :id, :username
+  puts "\n \nEnter user ID\n \n"
+  answer = gets.chomp
+  puts "\n \n"
+  tp ContactHistory.where(user_id: answer),
+          :id,
+          {:status => {:display_name => "Status", :width => 20}},
+          {:updated_at => {:display_name => "Contact Date", :width => 20}},
+          {:description => {:display_name => "Description", :width => 100}},
+          {"business.name" => {:display_name => "Business"}}
 end
 
-def find_a_business_not_contacted_before_a_given_date
+def find_a_business_not_contacted_since_a_given_date
 end
 
 def filter_by_status
