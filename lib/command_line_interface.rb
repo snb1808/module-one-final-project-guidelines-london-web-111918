@@ -9,8 +9,15 @@ require_relative "./search_and_save"
 def welcome
   puts "\n \n"
   puts "Welcome to your CRM tool! Please enter your username."
-  gets.chomp
 end
+
+def stored_name_input
+  name = gets.chomp
+  name
+end
+
+
+
 
 def username_search(input)
   if User.all.find {|user| user.username == input}
@@ -124,14 +131,15 @@ end
 
 def run_option_2(username)
   display_contact_history_table(retrieve_current_contact_history(username))
-  display_contact_history_options
+  display_contact_history_options(username)
 end
 
-def retrieve_current_contact_history(username)
-  username = username
+def retrieve_current_contact_history(parameter)
+  username = parameter
   current_user = User.find_by(username: "#{username}")
-  current_contact_ledger = []
-  current_contact_ledger << ContactHistory.where(user_id: current_user)
+  current_user
+  # current_contact_ledger = []
+  # current_contact_ledger << ContactHistory.where(user_id: current_user)
   # binding.pry
 end
 
@@ -141,7 +149,7 @@ def display_contact_history_table(contact_history_array)
   puts "\n \n"
 end
 
-def display_contact_history_options
+def display_contact_history_options(username)
   cli = HighLine.new
   puts "\n \n"
   answer = cli.ask(
@@ -160,13 +168,13 @@ def display_contact_history_options
 
   case answer
     when 1
-      update_a_record
+      update_a_record(username)
     when 2
       create_a_new_record
     when 3
       find_a_business_by_name
     when 4
-      find_only_my_records
+      find_only_my_records(username)
     when 5
       find_a_colleages_records
     when 6
@@ -184,14 +192,14 @@ def display_contact_history_options
   end
 end
 
-def update_a_record
+def update_a_record(username)
   cli = HighLine.new
   puts "\n \n"
   record_id = cli.ask("Enter a record ID", Integer)
   puts "\n \n"
   # binding.pry
   # display_contact_history_table(ContactHistory.find(record_id))
-  tp ContactHistory.find(record_id), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+  display_current_record = tp ContactHistory.find(record_id), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
   puts "\n \n"
 
   answer_id = cli.ask(
@@ -200,10 +208,32 @@ def update_a_record
     2. Update description
     3. Go back to display contact history options." , Integer) { |q| q.in = 1..3 }
   puts "\n \n"
+
+  case answer_id
+  when 1
+    new_status = cli.ask("Write a new status\n \n")
+    ContactHistory.where(id: record_id).update(status: new_status)
+    puts "\n \n"
+    render_contact_histories_table(record_id)
+    display_contact_history_options(username)
+    # binding.pry
+  when 2
+    new_description = cli.ask("Write a new description")
+    ContactHistory.where(id: record_id).update(description: new_description)
+    puts "\n \n"
+    render_contact_histories_table(record_id)
+    display_contact_history_options(username)
+  when 3
+    display_contact_history_options(username)
+  end
 end
 
-def render_contact_histories_table(required_method)
-  tp required_method, :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+def current_user_id(rec)
+end
+
+def render_contact_histories_table(record_id)
+  tp ContactHistory.find(record_id), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+  puts "\n \n"
 end
 
 def create_a_new_record
@@ -212,9 +242,14 @@ end
 def find_a_business_by_name
 end
 
-def find_only_my_records
-end
+# def current_user_id(stored_name_input)
+#   userid = retrieve_current_contact_history(stored_name_input).id
+#   userid
+# end
 
+def find_only_my_records(stored_name_input)
+  userid = retrieve_current_contact_history(stored_name_input).id
+  tp ContactHistory.where(user_id: userid), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}end
 def find_a_colleages_records
 end
 
@@ -231,6 +266,7 @@ def search_by_date_range
 end
 
 def back_to_main_menu
+  options
 end
 
 #-------------------- Option 3 --------------------------
