@@ -53,14 +53,22 @@ Operation instructions
 -------------------
 
 1. Enter username
-2. Login will check if user already exists or create a new account
+2a. Login will check if user already exists or create a new account
   
   <img src="readme-img/1-login.jpg" width="400" >
-  
-  
 
+2b. Login will check if user already exists or create a new account
+
+  <img src="readme-img/2-loginmenu.jpg" width="400" >
+
+3a. Select '1' on the options menu to 'Search Businesses by catagory and location'
   
- 
+3b. To search enter a catagory and location seperated by a comma. 
+
+  <img src="readme-img/3-search-example.jpg" width="800" >
+
+  The search results are limited to 10 at a time via an application preference.
+  The search results are automatically saved to the local application database.
   
   
   
