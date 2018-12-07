@@ -55,11 +55,12 @@ Operation instructions
 1. Enter username
   1a. Login will check if user already exists or create a new account
   
+  <img src="readme-img/1-login.jpg" width="400" >
   
   
+
   
-  
-  
+ 
   
   
   
