@@ -64,12 +64,47 @@ Operation instructions
 
 3a. Select '1' on the options menu to 'Search Businesses by catagory and location'
   
-3b. To search enter a catagory and location seperated by a comma. 
+3b. To search enter a catagory and location seperated by a comma.
+   The search results are limited to 10 at a time via an application preference.
+   The search results are automatically saved to the local application database.
 
   <img src="readme-img/3b-search-example.jpg" width="800" >
+  
+4. Select '2' view 'contact history'.
 
-  The search results are limited to 10 at a time via an application preference.
-  The search results are automatically saved to the local application database.
+  <img src="readme-img/4-contact-history.jpg" width="400" >
+
+
+  <img src="readme-img/5-new-record.jpg" width="800" >
+
+
+  <img src="readme-img/6-status.jpg" width="300" >
+
+
+  <img src="readme-img/7-description.jpg" width="800" >
+
+
+  <img src="readme-img/8-saved-rec.jpg" width="1000" >
+
+
+  <img src="readme-img/9-all-records.jpg" width="1000" >
+
+
+  <img src="readme-img/10-display-one-business-record.jpg" width="1000" >
+
+
+  <img src="readme-img/11-login-as-mark.jpg" width="400" >
+
+
+  <img src="readme-img/12-display-only-my-records-mark.jpg" width="1000" >
+
+
+  <img src="readme-img/13-display-given-user-record.jpg" width="1000" >
+
+
+  <img src="readme-img/14-search-rec-by-date.jpg" width="1000" >
+
+
   
   
   
