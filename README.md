@@ -4,7 +4,37 @@ CLI CRM Application
 Description
 ----------
 
-This is your very basic Command Line Interface Customer Relations Management tool. This can be used to save data on businesses of interest in a given location, and then log interactions between the user and the businesses. The target market for this application could be call centres, as staff could all, with their own usernames, access and update the contact records for various businesses as they interact with them and keep track of which businesses had and hadn't been contacted and what the outcomes of the phonecalls were.
+CRM app is a Customer Relations Management tool.
+CRM app can store business contact details retrieved from Yelp's Fusion API and log all customer interactions.
+
+Features
+-------------------
+- Support for multliple user logins
+- Find new customers via Yelp's local-search service
+- Log and track all interactions with businesses
+- Search customer interaction history by business, user or date
+
+
+MVP
+------------------
+- Store business data retrieved from Yelp Fusion API in a local database
+- Create a new record
+- Update record status and description
+- Delete record 
+- View all business contacts
+
+
+Stretch Goals Acheieved
+------------------
+- Filter records by business, user and contact date 
+
+
+Suggested improvement
+------------------
+- Refactor existing code
+- Improve UI
+- Add a KPI analytics module for managers
+
 
 Install instructions
 -------------------
@@ -14,8 +44,4 @@ Install instructions
 3. Run 'ruby bin/run.rb' to run the application.
 4. Create a user account by entering a username of choice when prompted.
 
-A contributors guide 
-------------------
 
-Link to the license for your code
--------------------------------
