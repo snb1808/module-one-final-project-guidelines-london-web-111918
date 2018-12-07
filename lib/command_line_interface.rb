@@ -80,13 +80,12 @@ end
 def display_table(yelp_results_hash)
   counter = 0
   rows = []
-  rows << ["Name", "Address", "Phone", "Rating", "Price"]
   yelp_results_hash["businesses"].each do |business|
     rows << [business["name"], business["location"]["display_address"], business["phone"], business["rating"], business["price"]]
     for_db = {name: business["name"], phone: business["phone"], location: business["location"]["display_address"], review_count: business["review_count"], rating: business["rating"], price: business["price"], website: business["url"]}
     Business.create(for_db)
   end
-  table = Terminal::Table.new :rows => rows
+  table = Terminal::Table.new :headings => ["Name", "Address", "Phone", "Rating", "Price"], :rows => rows
   puts "\n \n"
   puts table
   puts "\n \n"
@@ -108,13 +107,30 @@ end
 
 def display_contact_history_table(contact_history_array)
   puts "\n \n"
-  tp Business.all, :id,
-                  {:name => {:width => 70}},
-                  :phone,
-                  {"contact_histories.id" => {:display_name => "Rec_ID", :width => 6}},
-                  {"contact_histories.status" => {:display_name => "Status", :width => 12}},
-                  {"contact_histories.updated_at" => {:display_name => "Contact Date", :width => 20}},
-                  {"contact_histories.description" => {:display_name => "Description", :width => 100}}
+  rows = []
+  ContactHistory.all.each do |rec|
+    business = Business.all.select {|biz| biz.id == rec.business_id}
+    users = User.all.select {|user| user.id == rec.user_id}
+    users.each do |user|
+    business.each do |biz|
+    rows << [rec.id, user.username, biz.name, biz.id, biz.phone, rec.status, rec.date, rec.description]
+  end
+end
+  # Business.all.each do |business|
+  #   record = ContactHistory.all.select {|rec| rec.business_id == business.id}
+  #   record.each do |rec|
+      # rows << [business.id, business.name, business.phone, rec.id, rec.status, rec.date, rec.description]
+      # , business.contact_histories.id, business.contact_histories.status, business.contact_histories.date, business.contact_histories.description]
+  end
+  table = Terminal::Table.new :headings => ["ID", "User", "Business", "Business ID", "Phone", "Status", "Date", "Description"], :rows => rows
+  puts table
+  # tp Business.all, :id,
+  #                 {:name => {:width => 70}},
+  #                 :phone,
+  #                 {"contact_histories.id" => {:display_name => "Rec_ID", :width => 6}},
+  #                 {"contact_histories.status" => {:display_name => "Status", :width => 12}},
+  #                 {"contact_histories.updated_at" => {:display_name => "Contact Date", :width => 20}},
+  #                 {"contact_histories.description" => {:display_name => "Description", :width => 100}}
   puts "\n \n"
 end
 
@@ -126,13 +142,14 @@ def display_contact_history_options
       1. Create a new record
       2. Update a record
       3. Delete a record
-      4. Find a business by name
-      5. Find all records for a business
-      6. Find only my records
-      7. Find a colleages records
-      8. Find businesses not contacted since a given date
-      9. Search by date
-      10. Main menu\n \n", Integer) { |q| q.in = 1..10 }
+      4. Show all businesses
+      5. Find a business by name
+      6. Find all records for a business
+      7. Find only my records
+      8. Find a colleages records
+      9. Find businesses not contacted since a given date
+      10. Search by date
+      11. Main menu\n \n", Integer) { |q| q.in = 1..11 }
 
   case answer
     when 1
@@ -142,18 +159,20 @@ def display_contact_history_options
     when 3
       delete_a_record
     when 4
-      find_business_by_name
+      display_all_businesses
     when 5
-      find_all_records_for_a_business
+      find_business_by_name
     when 6
-      find_only_my_records
+      find_all_records_for_a_business
     when 7
-      find_a_colleages_records
+      find_only_my_records
     when 8
-      find_a_business_not_contacted_since_a_given_date
+      find_a_colleages_records
     when 9
-      search_by_date
+      find_a_business_not_contacted_since_a_given_date
     when 10
+      search_by_date
+    when 11
       run_main_menu
     else
       puts "    You must enter a valid option."
@@ -165,12 +184,22 @@ def update_a_record
   puts "\n \n"
   record_id = cli.ask("   Enter a record ID\n \n", Integer)
   puts "\n \n"
-  tp ContactHistory.find(record_id), :id,
-                                    {"business.name" => {:display_name => "Business", :width => 70}},
-                                    {"business.phone" => {:display_name => "Tel."}},
-                                    {:status => {:display_name => "Status", :width => 15}},
-                                    {:updated_at => {:display_name => "Contact Date", :width => 20}},
-                                    {:description => {:display_name => "Description", :width => 100}}
+  rows = []
+  records = ContactHistory.all.select {|rec| rec.id == record_id}
+  records.each do |rec|
+    business = Business.all.select {|biz| biz.id == rec.business_id}
+    business.each do |biz|
+      rows << [rec.id, biz.name, biz.phone, rec.status, rec.date, rec.description]
+    end
+  end
+  table = Terminal::Table.new :headings => ["ID", "Name", "Phone", "Status", "Date", "Description"], :rows => rows
+  puts table
+  # tp ContactHistory.find(record_id), :id,
+  #                                   {"business.name" => {:display_name => "Business", :width => 70}},
+  #                                   {"business.phone" => {:display_name => "Tel."}},
+  #                                   {:status => {:display_name => "Status", :width => 15}},
+  #                                   {:updated_at => {:display_name => "Contact Date", :width => 20}},
+                                    # {:description => {:display_name => "Description", :width => 100}}
   puts "\n \n"
   loop do answer_id = cli.ask(
     "   Choose an option
@@ -204,6 +233,7 @@ def render_contact_histories_table(record_id)
 end
 
 def create_a_new_record
+  display_all_businesses
   new = ContactHistory.new
   new.user_id = retrieve_current_user_details.id
   new.date = DateTime.now
@@ -215,7 +245,11 @@ def create_a_new_record
   new.description = gets.chomp
   puts "\n \n"
   new.save
-  tp new, :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}, {"business.name" => {:display_name => "Business"}}
+  rows = []
+  business = Business.all.find {|biz| biz.id == new.business_id}
+  rows << [new.id, new.status, new.date, new.description, business.name]
+  table = Terminal::Table.new :headings => ["ID", "Status", "Date", "Description", "Business"], :rows => rows
+  puts table
 end
 
 def delete_a_record
@@ -237,6 +271,15 @@ def delete_a_record
 end
   sleep(1)
   run_main_menu
+end
+
+def display_all_businesses
+  rows = []
+  Business.all.each do |business|
+      rows << [business.id, business.name, business.phone, business.location[1..-2], business.review_count, business.rating, business.price]
+  end
+  table = Terminal::Table.new :headings => ["ID", "Name", "Phone", "Location", "Review Count", "Rating", "Price"], :rows => rows
+  puts table
 end
 
 def find_business_by_name
