@@ -66,7 +66,7 @@ Operation instructions
   
 3b. To search enter a catagory and location seperated by a comma. 
 
-  <img src="readme-img/3-search-example.jpg" width="800" >
+  <img src="readme-img/3-search-exampl.jpg" width="800" >
 
   The search results are limited to 10 at a time via an application preference.
   The search results are automatically saved to the local application database.
