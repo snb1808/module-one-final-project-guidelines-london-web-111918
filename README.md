@@ -31,11 +31,12 @@ Stretch Goals Acheieved
 
 Suggested improvement
 ------------------
+- Fully utilise Yelp Fusion API search options
 - Selective record store for Yelp data retrieval to avoid duplicate data
 - Improved data entry validation
 - Add login password protection
 - Refactor existing code
-- Improve UI
+- Improve UI (Menu nativation, styling and window refresh)
 - Add a KPI analytics module for managers
 
 
@@ -47,4 +48,36 @@ Install instructions
 3. Run 'ruby bin/run.rb' to run the application.
 4. Create a user account by entering a username of choice when prompted.
 
+
+Operation instructions
+-------------------
+
+1. Enter username
+  1a. Login will check if user already exists or create a new account
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
