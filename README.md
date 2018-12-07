@@ -31,6 +31,9 @@ Stretch Goals Acheieved
 
 Suggested improvement
 ------------------
+- Selective record store for Yelp data retrieval to avoid duplicate data
+- Improved data entry validation
+- Add login password protection
 - Refactor existing code
 - Improve UI
 - Add a KPI analytics module for managers
