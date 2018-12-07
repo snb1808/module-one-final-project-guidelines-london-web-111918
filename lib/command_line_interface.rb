@@ -7,7 +7,7 @@ require_relative "./search_and_save"
 
 def welcome
   puts "\n \n"
-  puts "Welcome to your CRM tool! Please enter your username."
+  puts "    Welcome to your CRM tool! Please enter your username."
   puts "\n \n"
   name = gets.chomp
   name
@@ -16,12 +16,12 @@ end
 def username_search
   if User.all.find {|user| user.username == USERNAME}
     puts "\n \n"
-    puts "Welcome back, #{USERNAME}!"
+    puts "    Welcome back, #{USERNAME}!"
   else
     user = User.new(username: USERNAME)
     user.save
     puts "\n \n"
-    puts "New user created. Nice to meet you, #{USERNAME}!"
+    puts "    New user created. Nice to meet you, #{USERNAME}!"
  end
 end
 
@@ -36,20 +36,20 @@ def run_main_menu(counter = 0)
       run_option_3
     else
       puts "\n \n"
-      puts "Please choose a number between 1 and 3"
+      puts "    Please choose a number between 1 and 3"
   end
 end
 
 def options(counter)
   puts "\n \n"
-  puts "Please select one of the following options:"
+  puts "    Please select one of the following options:"
   if counter == 0
-    puts "1. Search businesses by category and location"
+    puts "       1. Search businesses by category and location"
   else
-    puts "1. Make another search"
+    puts "       1. Make another search"
   end
-  puts "2. Contact History"
-  puts "3. Exit application"
+  puts "       2. Contact History"
+  puts "       3. Exit application"
   puts "\n \n"
   input = gets.chomp
   input
@@ -67,7 +67,7 @@ end
 
 def user_input
   puts "\n \n"
-  puts "Please enter the category and location, separated by a comma."
+  puts "    Please enter the category and location, separated by a comma.\n \n"
   search_result = gets.chomp
   array = search_result.split(",")
   yelp_results_hash(array)
@@ -122,17 +122,17 @@ def display_contact_history_options
   cli = HighLine.new
   puts "\n \n"
   answer = cli.ask(
-  "Choose an option:
-  1. Create a new record
-  2. Update a record
-  3. Delete a record
-  4. Find a business by name
-  5. Find only my records
-  6. Find a colleages records
-  7. Find businesses not contacted since a given date
-  8. Filter by status
-  9. Search by date
-  10. Main menu\n \n", Integer) { |q| q.in = 1..10 }
+  "   Choose an option:
+      1. Create a new record
+      2. Update a record
+      3. Delete a record
+      4. Find a business by name
+      5. Find all records for a business
+      6. Find only my records
+      7. Find a colleages records
+      8. Find businesses not contacted since a given date
+      9. Search by date
+      10. Main menu\n \n", Integer) { |q| q.in = 1..10 }
 
   case answer
     when 1
@@ -144,52 +144,50 @@ def display_contact_history_options
     when 4
       find_business_by_name
     when 5
-      find_only_my_records
+      find_all_records_for_a_business
     when 6
-      find_a_colleages_records
+      find_only_my_records
     when 7
-      find_a_business_not_contacted_since_a_given_date
+      find_a_colleages_records
     when 8
-      filter_by_status
+      find_a_business_not_contacted_since_a_given_date
     when 9
       search_by_date
     when 10
       run_main_menu
     else
-      puts "You must enter a valid option."
+      puts "    You must enter a valid option."
   end
 end
 
 def update_a_record
   cli = HighLine.new
   puts "\n \n"
-  record_id = cli.ask("Enter a record ID", Integer)
+  record_id = cli.ask("   Enter a record ID\n \n", Integer)
   puts "\n \n"
-  display_current_record = tp ContactHistory.find(record_id), :id,
-                                                              {"business.name" => {:display_name => "Business", :width => 70}},
-                                                              {"business.phone" => {:display_name => "Tel."}},
-                                                              {:status => {:display_name => "Status", :width => 15}},
-                                                              {:updated_at => {:display_name => "Contact Date", :width => 20}},
-                                                              {:description => {:display_name => "Description", :width => 100}}
+  tp ContactHistory.find(record_id), :id,
+                                    {"business.name" => {:display_name => "Business", :width => 70}},
+                                    {"business.phone" => {:display_name => "Tel."}},
+                                    {:status => {:display_name => "Status", :width => 15}},
+                                    {:updated_at => {:display_name => "Contact Date", :width => 20}},
+                                    {:description => {:display_name => "Description", :width => 100}}
   puts "\n \n"
-
-  answer_id = cli.ask(
-    "Choose an option
-    1. Update status
-    2. Update description
-    3. Go back to display contact history options" , Integer) { |q| q.in = 1..3 }
+  loop do answer_id = cli.ask(
+    "   Choose an option
+        1. Update status
+        2. Update description
+        3. Go back to display contact history options" , Integer) { |q| q.in = 1..3 }
   puts "\n \n"
 
   case answer_id
   when 1
-    new_status = cli.ask("Write a new status\n \n")
+    new_status = cli.ask("    Write a new status\n \n")
     ContactHistory.where(id: record_id).update(status: new_status)
     puts "\n \n"
     render_contact_histories_table(record_id)
     display_contact_history_options
-    # binding.pry
   when 2
-    new_description = cli.ask("Write a new description")
+    new_description = cli.ask("   Write a new description")
     ContactHistory.where(id: record_id).update(description: new_description)
     puts "\n \n"
     render_contact_histories_table(record_id)
@@ -197,6 +195,7 @@ def update_a_record
   when 3
     display_contact_history_options
   end
+end
 end
 
 def render_contact_histories_table(record_id)
@@ -208,30 +207,32 @@ def create_a_new_record
   new = ContactHistory.new
   new.user_id = retrieve_current_user_details.id
   new.date = DateTime.now
-  puts "\n \nPlease enter the business ID\n \n"
+  puts "\n \n   Please enter the business ID\n \n"
   new.business_id = gets.chomp
-  puts "\n \nWhat is the status of this interaction?\n \n"
+  puts "\n \n   What is the status of this interaction?\n \n"
   new.status = gets.chomp
-  puts "\n \nPlease enter a description for this interaction\n \n"
+  puts "\n \n   Please enter a description for this interaction\n \n"
   new.description = gets.chomp
+  puts "\n \n"
   new.save
+  tp new, :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}, {"business.name" => {:display_name => "Business"}}
 end
 
 def delete_a_record
-  puts "\n \nEnter the ID of the record you wish to delete\n \n"
+  puts "\n \n   Enter the ID of the record you wish to delete\n \n"
   record_to_delete = ContactHistory.find_by(id: gets.chomp)
   if !record_to_delete
-    puts "\n \nThis record does not exist. Returning to main menu."
+    puts "\n \n   This record does not exist. Returning to main menu."
   else
     tp record_to_delete, :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
-  puts "\n \nAre you sure you wish to delete this record? Enter y/n\n \n"
+  puts "\n \n   Are you sure you wish to delete this record? Enter y/n\n \n"
   answer = gets.chomp
   case answer
   when "y"
     record_to_delete.destroy
-    puts "\n \nRecord deleted. Returning to main menu."
+    puts "\n \n   Record deleted. Returning to main menu."
   else
-    puts "\n \nRecord not deleted. Returning to main menu."
+    puts "\n \n   Record not deleted. Returning to main menu."
   end
 end
   sleep(1)
@@ -239,7 +240,7 @@ end
 end
 
 def find_business_by_name
-  puts "\n \nPlease enter the business' name\n \n"
+  puts "\n \n   Please enter the business' name\n \n"
   answer = gets.chomp
   puts "\n \n"
   business = Business.all.find {|biz| biz.name == answer}
@@ -253,6 +254,19 @@ def find_business_by_name
               {"contact_histories.description" => {:display_name => "Description", :width => 100}}
 end
 
+def find_all_records_for_a_business
+  puts "\n \n   Please enter the business ID\n \n"
+  answer = gets.chomp.to_i
+  puts "\n \n"
+  all_rows = ContactHistory.all.select {|rec| rec.business_id == answer}
+  tp all_rows, :id,
+              {:business_id => {:display_name => "business ID"}},
+              {:user_id => {:display_name => "user ID"}},
+              :status,
+              {:description => {:width => 100}},
+              :date
+end
+
 def find_only_my_records
   userid = retrieve_current_user_details.id
   tp ContactHistory.where(user_id: userid), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
@@ -260,7 +274,7 @@ end
 
 def find_a_colleages_records
   tp User.all, :id, :username
-  puts "\n \nEnter user ID\n \n"
+  puts "\n \n   Enter user ID\n \n"
   answer = gets.chomp
   puts "\n \n"
   tp ContactHistory.where(user_id: answer),
@@ -272,7 +286,7 @@ def find_a_colleages_records
 end
 
 def find_a_business_not_contacted_since_a_given_date
-  puts "\n \nEnter the date in the following format: YYYY-MM-DD\n \n"
+  puts "\n \n   Enter the date in the following format: YYYY-MM-DD\n \n"
   date = gets.chomp
   puts "\n \n"
   tp ContactHistory.where("updated_at >= ?", date),
@@ -289,7 +303,7 @@ def filter_by_status
 end
 
 def search_by_date
-  puts "Enter the date of the interation in the following format: YYYY-MM-DD"
+  puts "\n \n    Enter the date of the interation in the following format: YYYY-MM-DD\n \n"
   date = gets.chomp
   datetime = :updated_at
   date2 = datetime[0].split(" ")[0]
@@ -312,6 +326,6 @@ end
 
 def end_message
   puts "\n \n"
-  puts "Thank you for using the CRM app, #{USERNAME}! Have a nice day!"
+  puts "    Thank you for using the CRM app, #{USERNAME}! Have a nice day!"
   puts "\n \n"
 end
