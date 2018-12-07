@@ -288,13 +288,14 @@ def find_all_records_for_a_business
   puts "\n \n   Please enter the business ID\n \n"
   answer = gets.chomp.to_i
   puts "\n \n"
-  all_rows = ContactHistory.all.select {|rec| rec.business_id == answer}
-  tp all_rows, :id,
-              {:business_id => {:display_name => "business ID"}},
-              {:user_id => {:display_name => "user ID"}},
-              :status,
-              {:description => {:width => 100}},
-              :date
+  rows = []
+  records = ContactHistory.all.select {|rec| rec.business_id == answer}
+  records.each do |record|
+    business = Business.all.find {|biz| biz.id == record.business_id}
+      rows << [record.id, business.name, record.business_id, record.user_id, record.status, record.description, record.date]
+      end
+  table = Terminal::Table.new :headings => ["ID", "Business", "Business ID", "User ID", "Status", "Description", "Date"], :rows => rows
+  puts table
 end
 
 def find_only_my_records
@@ -339,18 +340,18 @@ end
 def find_a_business_not_contacted_since_a_given_date
   puts "\n \n   Enter the date in the following format: YYYY-MM-DD\n \n"
   date = gets.chomp
+  date_array = date.split("-").map(&:to_i)
+  date = DateTime.new(date_array[0], date_array[1], date_array[2], 12)
   puts "\n \n"
-  tp ContactHistory.where("updated_at >= ?", date),
-  :id,
-  {"user.id" => {:display_name => "User ID"}},
-  {:status => {:display_name => "Status", :width => 20}},
-  {:updated_at => {:display_name => "Contact Date", :width => 20}},
-  {:description => {:display_name => "Description", :width => 100}},
-  {"business.name" => {:display_name => "Business"}},
-  {"user.username" => {:display_name => "User"}}
-end
-
-def filter_by_status
+  rows = []
+  records = ContactHistory.where("updated_at <= ?", date)
+  records.each do |record|
+    business = Business.all.find {|biz| biz.id == record.business_id}
+    user = User.all.find {|user| user.id == record.user_id}
+      rows << [record.id, business.name, record.business_id, user.username, user.id, record.status, record.description, record.date]
+      end
+  table = Terminal::Table.new :headings => ["ID", "Business", "Business ID", "User", "User ID", "Status", "Description", "Date"], :rows => rows
+  puts table
 end
 
 def search_by_date
