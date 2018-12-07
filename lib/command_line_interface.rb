@@ -298,21 +298,42 @@ def find_all_records_for_a_business
 end
 
 def find_only_my_records
+  puts "\n \n"
   userid = retrieve_current_user_details.id
-  tp ContactHistory.where(user_id: userid), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+  rows = []
+  table = ""
+  records = ContactHistory.select {|rec| rec.user_id == userid}
+  records.each do |record|
+  businesses = Business.all.select {|biz| biz.id == record.business_id}
+    businesses.each do |business|
+        rows << [record.id, business.name, business.id, business.phone, record.status, record.date, record.description]
+        table = Terminal::Table.new :headings => ["ID", "Business", "Business ID", "Phone", "Status", "Date", "Description"], :rows => rows
+      end
+    end
+    puts table
 end
 
 def find_a_colleages_records
-  tp User.all, :id, :username
-  puts "\n \n   Enter user ID\n \n"
-  answer = gets.chomp
   puts "\n \n"
-  tp ContactHistory.where(user_id: answer),
-          :id,
-          {:status => {:display_name => "Status", :width => 20}},
-          {:updated_at => {:display_name => "Contact Date", :width => 20}},
-          {:description => {:display_name => "Description", :width => 100}},
-          {"business.name" => {:display_name => "Business"}}
+  rows_1 = []
+  table_1 = ""
+  User.all.each do |user|
+    rows_1 << [user.id, user.username]
+    table_1 = Terminal::Table.new :headings => ["ID", "Username"], :rows => rows_1
+    end
+  puts table_1
+  puts "\n \n   Enter user ID\n \n"
+  answer = gets.chomp.to_i
+  puts "\n \n"
+  rows_2 = []
+  table_2 = ""
+  records = ContactHistory.all.select {|rec| rec.user_id == answer}
+  records.each do |record|
+    business = Business.all.find {|biz| biz.id == record.business_id}
+      rows_2 << [record.id, business.name, business.id, business.phone, record.status, record.date, record.description]
+      table_2 = Terminal::Table.new :headings => ["ID", "Business", "Business ID", "Phone", "Status", "Date", "Description"], :rows => rows_2
+    end
+  puts table_2
 end
 
 def find_a_business_not_contacted_since_a_given_date
