@@ -116,21 +116,9 @@ def display_contact_history_table(contact_history_array)
     rows << [rec.id, user.username, biz.name, biz.id, biz.phone, rec.status, rec.date, rec.description]
   end
 end
-  # Business.all.each do |business|
-  #   record = ContactHistory.all.select {|rec| rec.business_id == business.id}
-  #   record.each do |rec|
-      # rows << [business.id, business.name, business.phone, rec.id, rec.status, rec.date, rec.description]
-      # , business.contact_histories.id, business.contact_histories.status, business.contact_histories.date, business.contact_histories.description]
   end
   table = Terminal::Table.new :headings => ["ID", "User", "Business", "Business ID", "Phone", "Status", "Date", "Description"], :rows => rows
   puts table
-  # tp Business.all, :id,
-  #                 {:name => {:width => 70}},
-  #                 :phone,
-  #                 {"contact_histories.id" => {:display_name => "Rec_ID", :width => 6}},
-  #                 {"contact_histories.status" => {:display_name => "Status", :width => 12}},
-  #                 {"contact_histories.updated_at" => {:display_name => "Contact Date", :width => 20}},
-  #                 {"contact_histories.description" => {:display_name => "Description", :width => 100}}
   puts "\n \n"
 end
 
@@ -194,20 +182,12 @@ def update_a_record
   end
   table = Terminal::Table.new :headings => ["ID", "Name", "Phone", "Status", "Date", "Description"], :rows => rows
   puts table
-  # tp ContactHistory.find(record_id), :id,
-  #                                   {"business.name" => {:display_name => "Business", :width => 70}},
-  #                                   {"business.phone" => {:display_name => "Tel."}},
-  #                                   {:status => {:display_name => "Status", :width => 15}},
-  #                                   {:updated_at => {:display_name => "Contact Date", :width => 20}},
-                                    # {:description => {:display_name => "Description", :width => 100}}
   puts "\n \n"
   loop do answer_id = cli.ask(
     "   Choose an option
         1. Update status
         2. Update description
-        3. Go back to display contact history options" , Integer) { |q| q.in = 1..3 }
-  puts "\n \n"
-
+        3. Go back to display contact history options\n \n" , Integer) { |q| q.in = 1..3 }
   case answer_id
   when 1
     new_status = cli.ask("    Write a new status\n \n")
@@ -228,8 +208,11 @@ end
 end
 
 def render_contact_histories_table(record_id)
-  tp ContactHistory.find(record_id), :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
-  puts "\n \n"
+  rows = []
+  rec = ContactHistory.find(record_id)
+      rows << [rec.id, rec.status, rec.date, rec.description]
+  table = Terminal::Table.new :headings => ["ID", "Status", "Date", "Description"], :rows => rows
+  puts table
 end
 
 def create_a_new_record
@@ -258,7 +241,10 @@ def delete_a_record
   if !record_to_delete
     puts "\n \n   This record does not exist. Returning to main menu."
   else
-    tp record_to_delete, :id, {:status => {:display_name => "Status", :width => 12}}, {:updated_at => {:display_name => "Contact Date", :width => 20}}, {:description => {:display_name => "Description", :width => 100}}
+    rows = []
+    rows << [record_to_delete.id, record_to_delete.status, record_to_delete.date, record_to_delete.description]
+    table = Terminal::Table.new :headings => ["ID", "Status", "Date", "Description"], :rows => rows
+    puts table
   puts "\n \n   Are you sure you wish to delete this record? Enter y/n\n \n"
   answer = gets.chomp
   case answer
@@ -286,15 +272,16 @@ def find_business_by_name
   puts "\n \n   Please enter the business' name\n \n"
   answer = gets.chomp
   puts "\n \n"
-  business = Business.all.find {|biz| biz.name == answer}
-  tp business, :id,
-              :name,
-              :phone,
-              :location,
-              {:website => {:width => 100}},
-              {"contact_histories.id" => {:display_name => "Rec ID"}},
-              {"contact_histories.status" => {:display_name => "Status"}},
-              {"contact_histories.description" => {:display_name => "Description", :width => 100}}
+  business = Business.all.select {|biz| biz.name == answer}
+  rows = []
+  business.each do |biz|
+  records = ContactHistory.all.select {|rec| rec.business_id == biz.id}
+  records.each do |rec|
+      rows << [biz.id, biz.name, biz.phone, biz.location, biz.website.split("?")[0], rec.id, rec.status, rec.description]
+    end
+  end
+  table = Terminal::Table.new :headings => ["ID", "Name", "Phone", "Location", "Website", "Record ID", "Status", "Description"], :rows => rows
+  puts table
 end
 
 def find_all_records_for_a_business
