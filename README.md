@@ -74,35 +74,52 @@ Operation instructions
 
   <img src="readme-img/4-contact-history.jpg" width="400" >
 
+5. In the 'contact history' menu select '1' to 'create a new record'. Enter a business ID from the list.
 
   <img src="readme-img/5-new-record.jpg" width="800" >
+  
+6. Type a status Eg. 'First call', 'Call back', 'Meeting', 'Quote', 'Sold', 'Shipped' etc.
 
 
   <img src="readme-img/6-status.jpg" width="300" >
 
 
+  <img src="readme-img/6-status.jpg" width="300" >
+
+7. Write a brief description about the client interaction. 
+
   <img src="readme-img/7-description.jpg" width="800" >
 
+8. The record is saved and displayed automatically.
 
   <img src="readme-img/8-saved-rec.jpg" width="1000" >
 
+9. Select option to view all records.
 
   <img src="readme-img/9-all-records.jpg" width="1000" >
 
+10. Select option to display a particular business record.
 
   <img src="readme-img/10-display-one-business-record.jpg" width="1000" >
 
+11. Login as different user.
 
   <img src="readme-img/11-login-as-mark.jpg" width="400" >
 
+12. Option 7 in contact history shows only the records of the current logged in user.
 
   <img src="readme-img/12-display-only-my-records-mark.jpg" width="1000" >
 
+13. It is possible to view a list of all users on the system and view only their records.
 
   <img src="readme-img/13-display-given-user-record.jpg" width="1000" >
 
+14. Search record by date by entering the date format as YYYY-MM-DD
 
   <img src="readme-img/14-search-rec-by-date.jpg" width="1000" >
+  
+  
+ 
 
 
   
